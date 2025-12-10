@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import ShimmerText from '@/components/ShimmerText';
+import ThinkingComponent from '@/components/ThinkingComponent';
 
 const slogans = [
   "Turn chats into apps",
@@ -24,6 +26,8 @@ const slogans = [
 export default function Landing() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [showThinking, setShowThinking] = useState(false);
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,6 +41,16 @@ export default function Landing() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleStartThinking = () => {
+    setShowThinking(true);
+    setShowResult(false);
+  };
+
+  const handleThinkingComplete = () => {
+    setShowThinking(false);
+    setShowResult(true);
+  };
+
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-black text-white">
       {/* Enhanced animated aurora background layers */}
@@ -48,20 +62,70 @@ export default function Landing() {
       <div className="absolute inset-0 bg-particles" />
       
       {/* Main content - centered */}
-      <main className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <h1 className="text-center text-[clamp(28px,6vw,64px)] font-medium tracking-tight mb-4">
-          Turn Chats into Apps
-        </h1>
-        
-        {/* Rotating slogans */}
-        <div className="mt-4 h-8 md:h-10 overflow-hidden flex items-center justify-center">
-          <span
-            className={`inline-block text-center text-[clamp(18px,3vw,32px)] font-light transition-all duration-[400ms] ease-in-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-            }`}
-          >
-            {slogans[currentIndex]}
-          </span>
+      <main className="relative z-10 h-full flex flex-col items-center justify-center px-6 gap-8">
+        <div className="text-center">
+          <h1 className="text-center text-[clamp(28px,6vw,64px)] font-medium tracking-tight mb-4">
+            Turn Chats into Apps
+          </h1>
+          
+          {/* Rotating slogans */}
+          <div className="mt-4 h-8 md:h-10 overflow-hidden flex items-center justify-center">
+            <span
+              className={`inline-block text-center text-[clamp(18px,3vw,32px)] font-light transition-all duration-[400ms] ease-in-out ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              }`}
+            >
+              {slogans[currentIndex]}
+            </span>
+          </div>
+        </div>
+
+        {/* Demo Section */}
+        <div className="w-full max-w-2xl space-y-6">
+          {/* Shimmer Text Demo */}
+          <div className="text-center">
+            <ShimmerText 
+              text="✨ Grok-like Shimmer Effect ✨" 
+              className="text-2xl md:text-4xl font-bold"
+            />
+          </div>
+
+          {/* Button to trigger thinking */}
+          {!showThinking && !showResult && (
+            <div className="flex justify-center">
+              <button
+                onClick={handleStartThinking}
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                Start Thinking Demo
+              </button>
+            </div>
+          )}
+
+          {/* Thinking Component */}
+          {showThinking && (
+            <ThinkingComponent 
+              onComplete={handleThinkingComplete}
+              className="w-full"
+            />
+          )}
+
+          {/* Result after thinking */}
+          {showResult && (
+            <div className="text-center space-y-4 animate-fade-in">
+              <div className="p-6 rounded-2xl border border-green-500/30 bg-green-500/10">
+                <p className="text-lg text-green-400 font-medium">
+                  ✓ Thinking complete! Ready to build amazing things.
+                </p>
+              </div>
+              <button
+                onClick={handleStartThinking}
+                className="px-4 py-2 text-sm text-white/70 hover:text-white transition-colors"
+              >
+                Run again
+              </button>
+            </div>
+          )}
         </div>
       </main>
       
@@ -82,3 +146,4 @@ export default function Landing() {
     </div>
   );
 }
+
